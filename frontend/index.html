@@ -1,0 +1,123 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Overlord Grid | Sovereign Shield</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- ============ TOP BAR ============ -->
+    <header id="topbar">
+        <div class="brand">
+            <h1>PROJECT OVERLORD-GRID</h1>
+            <span class="subtitle">SOVEREIGN SHIELD // RAN DEFENSE CONSOLE</span>
+        </div>
+        <div class="top-metrics">
+            <div class="metric">
+                <label>THREAT CONFIDENCE</label>
+                <div class="gauge"><div id="confidence-fill"></div><span id="confidence-val">0%</span></div>
+            </div>
+            <div class="metric">
+                <label>SYSTEM STATUS</label>
+                <div id="status-pill" class="pill secure">INITIALIZING</div>
+            </div>
+            <div class="metric">
+                <label>GRID CLOCK</label>
+                <div id="clock" class="mono">--:--:--</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============ LEFT: KILL CHAIN + KPIs ============ -->
+    <aside id="left-panel">
+        <section class="panel">
+            <h2>KILL CHAIN</h2>
+            <ol id="phases">
+                <li data-phase="SECURE"><i></i>NOMINAL OPS</li>
+                <li data-phase="ROGUE_ACTIVATION"><i></i>ROGUE BTS ON AIR</li>
+                <li data-phase="DOWNGRADE"><i></i>CIPHER DOWNGRADE</li>
+                <li data-phase="MESH_FORMATION"><i></i>MESH FALLBACK</li>
+                <li data-phase="CONTAINED"><i></i>THREAT CONTAINED</li>
+            </ol>
+        </section>
+        <section class="panel">
+            <h2>GRID TELEMETRY</h2>
+            <div class="kpi-grid">
+                <div class="kpi"><label>UEs ON ROGUE</label><span id="kpi-rogue" class="mono">0</span></div>
+                <div class="kpi"><label>IMSIs CAPTURED</label><span id="kpi-imsi" class="mono">0</span></div>
+                <div class="kpi"><label>MESH NODES</label><span id="kpi-mesh" class="mono">0</span></div>
+                <div class="kpi"><label>AVG HOPS</label><span id="kpi-hops" class="mono">—</span></div>
+                <div class="kpi"><label>MESH THROUGHPUT</label><span id="kpi-tput" class="mono">—</span></div>
+                <div class="kpi"><label>PKTS RELAYED</label><span id="kpi-relayed" class="mono">0</span></div>
+            </div>
+            <div class="enc-row">
+                <label>ACTIVE CIPHER</label>
+                <span id="enc" class="mono">A5/3</span>
+            </div>
+        </section>
+        <section class="panel legend">
+            <h2>LEGEND</h2>
+            <p><i class="dot cyan"></i>UE in service &nbsp;<i class="dot red"></i>on rogue / exposed</p>
+            <p><i class="dot green"></i>mesh node &nbsp;<i class="dot gold"></i>mesh gateway</p>
+            <p><i class="dot blue"></i>macro cell &nbsp;<i class="dot red"></i>rogue BTS</p>
+        </section>
+    </aside>
+
+    <!-- ============ RIGHT: EVENT LOG ============ -->
+    <aside id="right-panel">
+        <section class="panel log-panel">
+            <h2>LIVE EVENT FEED</h2>
+            <div id="event-log" class="mono"></div>
+        </section>
+    </aside>
+
+    <!-- ============ BOTTOM: CONTROLS ============ -->
+    <footer id="controls">
+        <button class="btn primary" onclick="trigger('scenario')">▶ RUN SCENARIO</button>
+        <button class="btn danger" onclick="trigger('attack')">SIMULATE ATTACK</button>
+        <button class="btn defend" onclick="trigger('defend')">ACTIVATE MESH</button>
+        <button class="btn" onclick="trigger('secure')">RESET GRID</button>
+        <span id="conn" class="mono">● connecting…</span>
+    </footer>
+
+    <!-- ============ OSINT / CCTV PIVOT PANEL ============ -->
+    <div id="osint-panel" class="hidden">
+        <div class="panel-header">
+            <span>🔴 LIVE PIVOT: SHODAN.IO INTEL</span>
+            <span id="osint-close" onclick="document.getElementById('osint-panel').classList.add('hidden')">✖</span>
+        </div>
+        <div class="osint-terminal" id="osint-term">
+            <!-- Terminal text will inject here -->
+        </div>
+        <div class="cctv-container">
+            <div class="scanlines"></div>
+            <!-- Royalty-free traffic/street loop, filtered to look like CCTV -->
+            <video id="cctv-video" autoplay loop muted playsinline>
+                <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+            </video>
+            <div class="cctv-overlay">
+                <div class="crosshair"></div>
+                <div class="cctv-data">
+                    <span>CAM-KE-NRB-04</span>
+                    <span class="blink">REC</span>
+                    <span id="cctv-coords">LAT: -1.2921 LNG: 36.8219</span>
+                </div>
+                <div class="ai-box hidden" id="ai-box">SUSPECT HARDWARE DETECTED</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function trigger(mode) {
+            fetch(`/trigger/${mode}`).catch(() => {
+                // fallback if frontend is opened from file:// against a remote backend
+                fetch(`http://localhost:8000/trigger/${mode}`);
+            });
+        }
+    </script>
+</body>
+</html>
