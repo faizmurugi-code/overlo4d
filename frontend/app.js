@@ -681,7 +681,7 @@ function openCameraFor(towerId) {
 
     if (towerId === 'ROGUE-LEFT') {
         title.innerText = "CAM: LEFT END OF BACK SEAT";
-        img.src = "https://TEAMMATE_1_NGROK.ngrok-free.app/video_feed"; // <-- PUT NGROK LINK 1 HERE
+        img.src = "https://snowdrift-fidgety-staple.ngrok-free.dev/video_feed"; // <-- PUT NGROK LINK 1 HERE
         aiBox.innerText = "TEAMMATE 1 ACQUIRED";
     } else {
         title.innerText = "CAM: RIGHT END OF BACK SEAT";
