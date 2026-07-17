@@ -680,7 +680,7 @@ function openCameraFor(towerId) {
     term.innerHTML = "<div>[*] Establishing secure tunnel to selected node...</div>";
 
     if (towerId === 'ROGUE-LEFT') {
-        title.innerText = "CAM: LEFT END OF BACK SEAT";
+        title.innerText = "TeamMate 1: LEFT END OF BACK SEAT";
         img.src = "https://snowdrift-fidgety-staple.ngrok-free.dev/video_feed"; // <-- PUT NGROK LINK 1 HERE
         aiBox.innerText = "TEAMMATE 1 ACQUIRED";
     } else {
