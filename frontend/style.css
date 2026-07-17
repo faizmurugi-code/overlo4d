@@ -176,7 +176,14 @@ canvas { display: block; }
     line-height: 1.55;
     display: flex; flex-direction: column; justify-content: flex-end;
 }
-#event-log .ev { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.92; }
+#event-log .ev { 
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    opacity: 0.92; 
+    flex-shrink: 0; /* THIS FIXES THE SQUISHING TEXT */
+    padding: 2px 0; /* Adds breathing room between lines */
+}
 #event-log .t { opacity: 0.45; margin-right: 6px; }
 #event-log .src { display: inline-block; width: 56px; opacity: 0.7; }
 #event-log .INFO { color: #9fd8b4; }
@@ -300,3 +307,38 @@ canvas { display: block; }
     background: rgba(255, 51, 85, 0.1);
 }
 .ai-box.hidden { display: none; }
+/* ============ DARAJA API WIDGET ============ */
+.mpesa-panel {
+    border-color: #52b520; /* Safaricom Green */
+    background: rgba(10, 30, 10, 0.85);
+}
+.mpesa-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1px solid rgba(82, 181, 32, 0.4);
+    padding-bottom: 6px; margin-bottom: 10px;
+}
+.mpesa-header h2 { border: none; padding: 0; margin: 0; color: #52b520; text-shadow: 0 0 8px #52b520; }
+.status-ok { color: #52b520; font-size: 10px; }
+.status-danger { color: var(--red); font-size: 10px; animation: blink 1s infinite; }
+.status-mesh { color: var(--cyan); font-size: 10px; }
+
+.mpesa-form { display: flex; gap: 8px; margin-bottom: 10px; }
+.mpesa-form input {
+    flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #52b520;
+    color: #fff; padding: 6px; font-family: inherit; font-size: 12px;
+    min-width: 0; /* Prevents overflow */
+}
+#btn-stk {
+    background: #52b520; color: #000; border: none; cursor: pointer;
+    font-weight: bold; padding: 0 10px; font-family: inherit; transition: 0.3s;
+    white-space: nowrap;
+}
+#btn-stk:hover { background: #fff; box-shadow: 0 0 15px #52b520; }
+
+#mpesa-terminal {
+    background: #000; padding: 8px; font-size: 10px; height: 65px;
+    overflow-y: auto; color: #aaa; border: 1px solid rgba(255,255,255,0.1);
+}
+.msg-success { color: #52b520; }
+.msg-error { color: var(--red); text-shadow: 0 0 5px var(--red); }
+.msg-mesh { color: var(--cyan); text-shadow: 0 0 5px var(--cyan); }
