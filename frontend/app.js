@@ -685,7 +685,7 @@ function openCameraFor(towerId) {
         aiBox.innerText = "TEAMMATE 1 ACQUIRED";
     } else {
         title.innerText = "CAM: RIGHT END OF BACK SEAT";
-        img.src = "https://TEAMMATE_2_NGROK.ngrok-free.app/video_feed"; // <-- PUT NGROK LINK 2 HERE
+        img.src = "https://cheddar-revolver-dedicator.ngrok-free.dev/video_feed?t=" + Date.now();  // <-- PUT NGROK LINK 2 HERE
         aiBox.innerText = "TEAMMATE 2 ACQUIRED";
     }
 
