@@ -473,6 +473,7 @@ class Engine:
         exposed = sum(1 for u in self.ues if u.imsi_exposed)
         mesh_nodes = sum(1 for u in self.ues if u.mesh)
 
+        # In engine.py inside the snapshot() function...
         towers = []
         for tw in self._legit_towers():
             towers.append({
@@ -481,10 +482,18 @@ class Engine:
                 "ues": sum(1 for u in self.ues if u.cell == tw["id"]),
                 "rogue": False,
             })
+            
+        # NEW: Output TWO rogue towers for the frontend to render
         towers.append({
-            "id": self.rogue["id"], "x": self.rogue["x"], "z": self.rogue["z"],
+            "id": "ROGUE-LEFT", "x": 14.0, "z": -8.0,
             "tac": self.rogue["tac"], "pci": self.rogue["pci"], "earfcn": self.rogue["earfcn"],
-            "ues": on_rogue, "rogue": True,
+            "ues": on_rogue // 2, "rogue": True,
+            "active": self.rogue["active"], "ramp": round(self.rogue["ramp"], 2),
+        })
+        towers.append({
+            "id": "ROGUE-RIGHT", "x": -16.0, "z": 10.0,
+            "tac": self.rogue["tac"], "pci": self.rogue["pci"], "earfcn": self.rogue["earfcn"],
+            "ues": on_rogue - (on_rogue // 2), "rogue": True,
             "active": self.rogue["active"], "ramp": round(self.rogue["ramp"], 2),
         })
 

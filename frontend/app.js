@@ -63,13 +63,15 @@ function init() {
 }
 
 function buildTowers() {
-    // macro cells — engine snapshot matches these ids (BTS-1..3)
     const specs = [
         { id: "KABARAK-MAIN", x: -25, z: 2 },
         { id: "NAKURU-CBD", x: 0, z: -3 },
         { id: "RAFIKI-NODE", x: 25, z: 2 },
-        { id: "ROGUE-VAN-01", x: 6, z: -7, rogue: true },
+        // The two new rogue towers
+        { id: "ROGUE-LEFT", x: 14, z: -8, rogue: true },
+        { id: "ROGUE-RIGHT", x: -16, z: 10, rogue: true },
     ];
+    // ... rest of the function stays the same
     specs.forEach(spec => {
         const g = new THREE.Group();
         const color = spec.rogue ? COLORS.rogue : COLORS.tower;
@@ -630,3 +632,80 @@ updateHUD = function(s) {
         }
     }
 };
+/* ============================ 3D CLICK DETECTION (RAYCASTER) ============================ */
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+window.addEventListener('pointerdown', (event) => {
+    // Ignore clicks if the camera panel is already open
+    if (!document.getElementById('osint-panel').classList.contains('hidden')) return;
+
+    // Calculate mouse position
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    // Get the 3D meshes of the two red towers
+    const rogueMeshes = [];
+    if(towers3D['ROGUE-LEFT'] && towers3D['ROGUE-LEFT'].visible) rogueMeshes.push(...towers3D['ROGUE-LEFT'].children);
+    if(towers3D['ROGUE-RIGHT'] && towers3D['ROGUE-RIGHT'].visible) rogueMeshes.push(...towers3D['ROGUE-RIGHT'].children);
+
+    const intersects = raycaster.intersectObjects(rogueMeshes, true);
+
+    if (intersects.length > 0) {
+        // Find which tower was clicked
+        let clickedId = 'ROGUE-LEFT';
+        let currentObj = intersects[0].object;
+        
+        while(currentObj.parent && currentObj.parent.type !== "Scene") {
+            if (currentObj.parent === towers3D['ROGUE-RIGHT']) { clickedId = 'ROGUE-RIGHT'; break; }
+            currentObj = currentObj.parent;
+        }
+        
+        openCameraFor(clickedId);
+    }
+});
+
+/* ============================ OSINT DYNAMIC CAMERA LOGIC ============================ */
+function openCameraFor(towerId) {
+    const panel = document.getElementById('osint-panel');
+    const term = document.getElementById('osint-term');
+    const img = document.getElementById('cctv-video-single');
+    const title = document.getElementById('cctv-title');
+    const aiBox = document.getElementById('ai-box-single');
+
+    panel.classList.remove('hidden');
+    aiBox.classList.add('hidden');
+    term.innerHTML = "<div>[*] Establishing secure tunnel to selected node...</div>";
+
+    if (towerId === 'ROGUE-LEFT') {
+        title.innerText = "CAM: LEFT END OF BACK SEAT";
+        img.src = "https://TEAMMATE_1_NGROK.ngrok-free.app/video_feed"; // <-- PUT NGROK LINK 1 HERE
+        aiBox.innerText = "TEAMMATE 1 ACQUIRED";
+    } else {
+        title.innerText = "CAM: RIGHT END OF BACK SEAT";
+        img.src = "https://TEAMMATE_2_NGROK.ngrok-free.app/video_feed"; // <-- PUT NGROK LINK 2 HERE
+        aiBox.innerText = "TEAMMATE 2 ACQUIRED";
+    }
+
+    setTimeout(() => {
+        term.innerHTML += "<div>[+] STREAM HIJACKED SUCCESSFULLY.</div>";
+        aiBox.classList.remove('hidden');
+    }, 1000);
+}
+
+// THIS FUNCTION STOPS THE LAG WHEN YOU CLICK 'X'
+window.closeOSINT = function() {
+    document.getElementById('osint-panel').classList.add('hidden');
+    // Emptying the src instantly stops the video download, freeing up your computer's memory!
+    document.getElementById('cctv-video-single').src = ""; 
+};
+
+// Update OSINT sequence to prompt the user to click
+function triggerOsintSequence() {
+    const term = document.getElementById('event-log');
+    term.innerHTML += `<div class="msg-error" style="font-size: 14px; background: rgba(255,0,0,0.2); padding: 5px; margin-top: 5px;">[!] TDOA GEOLOCATION COMPLETE. TWO ROGUE NODES DETECTED.</div>`;
+    term.innerHTML += `<div class="msg-mesh" style="font-size: 14px; font-weight: bold; animation: blink 1s infinite;">>>> CLICK ON A RED TOWER TO INTERCEPT LIVE CAMERA FEED <<<</div>`;
+    term.scrollTop = term.scrollHeight;
+}

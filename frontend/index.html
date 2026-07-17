@@ -102,42 +102,25 @@
         <span id="conn" class="mono">● connecting…</span>
     </footer>
 
-    <!-- ============ OSINT / CCTV PIVOT PANEL (DUAL CAM) ============ -->
+    <!-- ============ OSINT / CCTV PIVOT PANEL (CLICK TO VIEW) ============ -->
     <div id="osint-panel" class="hidden">
         <div class="panel-header">
-            <span>🔴 LIVE PIVOT: MULTI-NODE INTERCEPT</span>
-            <span id="osint-close" onclick="document.getElementById('osint-panel').classList.add('hidden')">✖</span>
+            <span>🔴 LIVE PIVOT: TARGET INTERCEPT</span>
+            <!-- The X Button that closes the camera and stops the lag -->
+            <span id="osint-close" onclick="closeOSINT()" style="cursor:pointer; color:#ff3355; font-size:16px; font-weight:bold; letter-spacing: 1px;">✖ CLOSE</span>
         </div>
-        <div class="osint-terminal" id="osint-term">
-            <!-- Terminal text will inject here -->
-        </div>
+        <div class="osint-terminal" id="osint-term"></div>
         
-        <!-- Dual Camera Grid -->
-        <div class="cctv-grid">
-            <!-- Camera 1: Teammate 1 -->
-            <div class="cctv-container">
-                <div class="scanlines"></div>
-                <img id="cctv-video-1" src="" crossorigin="anonymous" alt="Waiting for feed...">
-                <div class="cctv-overlay">
-                    <div class="crosshair"></div>
-                    <div class="cctv-data">
-                        <span>CAM: KABARAK GATE</span><span class="blink">REC</span>
-                    </div>
-                    <div class="ai-box hidden" id="ai-box-1">TEAMMATE 1 ACQUIRED</div>
+        <!-- Single Dynamic Camera -->
+        <div class="cctv-container">
+            <div class="scanlines"></div>
+            <img id="cctv-video-single" src="" crossorigin="anonymous" alt="Connecting to stream...">
+            <div class="cctv-overlay">
+                <div class="crosshair"></div>
+                <div class="cctv-data">
+                    <span id="cctv-title">CAM: TARGET ACQUIRED</span><span class="blink">REC</span>
                 </div>
-            </div>
-            
-            <!-- Camera 2: Teammate 2 -->
-            <div class="cctv-container">
-                <div class="scanlines"></div>
-                <img id="cctv-video-2" src="" crossorigin="anonymous" alt="Waiting for feed...">
-                <div class="cctv-overlay">
-                    <div class="crosshair"></div>
-                    <div class="cctv-data">
-                        <span>CAM: NAKURU CBD</span><span class="blink">REC</span>
-                    </div>
-                    <div class="ai-box hidden" id="ai-box-2">TEAMMATE 2 ACQUIRED</div>
-                </div>
+                <div class="ai-box hidden" id="ai-box-single">TEAMMATE ACQUIRED</div>
             </div>
         </div>
     </div>
