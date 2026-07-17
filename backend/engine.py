@@ -58,13 +58,12 @@ SCENARIO = [
 ]
 
 TOWER_SPECS = [
-    {"id": "BTS-1", "x": -25.0, "z": 2.0,  "tac": "7A31", "pci": 12, "earfcn": 1815},
-    {"id": "BTS-2", "x":   0.0, "z": -3.0, "tac": "7A31", "pci": 28, "earfcn": 1815},
-    {"id": "BTS-3", "x":  25.0, "z": 2.0,  "tac": "7A32", "pci": 41, "earfcn": 1840},
+    {"id": "KABARAK-MAIN", "x": -25.0, "z": 2.0,  "tac": "7A31", "pci": 12, "earfcn": 1815},
+    {"id": "NAKURU-CBD", "x":   0.0, "z": -3.0, "tac": "7A31", "pci": 28, "earfcn": 1815},
+    {"id": "RAFIKI-NODE", "x":  25.0, "z": 2.0,  "tac": "7A32", "pci": 41, "earfcn": 1840},
 ]
 
-ROGUE_SPEC = {"id": "ROGUE-BTS", "x": 6.0, "z": -7.0, "tac": "9F21", "pci": 77, "earfcn": 3850}
-
+ROGUE_SPEC = {"id": "ROGUE-VAN-01", "x": 6.0, "z": -7.0, "tac": "9F21", "pci": 77, "earfcn": 3850}
 
 def _rsrp(tx_dbm: float, dist: float) -> float:
     """Log-distance path loss with light fast-fading."""

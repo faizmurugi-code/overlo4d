@@ -231,7 +231,7 @@ canvas { display: block; }
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
+    width: 850px;
     background: rgba(0, 10, 5, 0.95);
     border: 1px solid var(--amber);
     box-shadow: 0 0 30px rgba(255, 179, 0, 0.2);
@@ -261,14 +261,16 @@ canvas { display: block; }
     overflow-y: hidden;
 }
 .cctv-container {
-    position: relative;
-    width: 100%; height: 320px;
-    background: #000;
-    overflow: hidden;
+    flex: 1; height: 260px; position: relative; overflow: hidden;
+    /* CSS Static Fallback */
+    background: repeating-radial-gradient(#333 0 0.0001%, #000 0 0.0002%) 50% 0/2500px 2500px, 
+                repeating-conic-gradient(#333 0 0.0001%, #000 0 0.0002%) 60% 60%/2500px 2500px;
+    background-blend-mode: difference;
+    animation: tv-static 0.2s infinite alternate;
 }
-#cctv-video {
+#cctv-video-1, #cctv-video-2 {
     width: 100%; height: 100%; object-fit: cover;
-    filter: grayscale(100%) contrast(150%) brightness(80%);
+    filter: grayscale(100%) contrast(120%) brightness(130%) sepia(40%) hue-rotate(50deg);
 }
 .scanlines {
     position: absolute; inset: 0;

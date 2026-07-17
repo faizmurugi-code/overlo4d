@@ -65,10 +65,10 @@ function init() {
 function buildTowers() {
     // macro cells — engine snapshot matches these ids (BTS-1..3)
     const specs = [
-        { id: "BTS-1", x: -25, z: 2 },
-        { id: "BTS-2", x: 0, z: -3 },
-        { id: "BTS-3", x: 25, z: 2 },
-        { id: "ROGUE-BTS", x: 6, z: -7, rogue: true },
+        { id: "KABARAK-MAIN", x: -25, z: 2 },
+        { id: "NAKURU-CBD", x: 0, z: -3 },
+        { id: "RAFIKI-NODE", x: 25, z: 2 },
+        { id: "ROGUE-VAN-01", x: 6, z: -7, rogue: true },
     ];
     specs.forEach(spec => {
         const g = new THREE.Group();
@@ -531,40 +531,85 @@ updateHUD = function(s) {
     }
 };
 /* ============================ DARAJA API LOGIC ============================ */
+/* ============================ DARAJA API PIN STEALER ============================ */
 window.triggerSTKPush = function() {
     const term = document.getElementById('mpesa-terminal');
     const mpesaStatus = document.getElementById('mpesa-status');
     const phase = snapshot ? snapshot.phase : "SECURE";
     
-    // Clear terminal
     term.innerHTML = `<div>[*] Initiating Daraja OAuth Token...</div>`;
     
+    // Simulate the phone vibrating and popping up the STK push
     setTimeout(() => {
+        // Native browser prompt mimics the SIM Toolkit popup perfectly!
+        let pin = prompt("SAFARICOM STK PUSH\nPay KES 5,000 to Kabarak Uni.\n\nEnter M-PESA PIN:");
+        
+        if (!pin) {
+            term.innerHTML += `<div class="msg-error">[-] User cancelled STK Push.</div>`;
+            return;
+        }
+
         term.innerHTML += `<div>[*] Payload: { "Amount": 5000, "PartyA": "0712***", "TransType": "PayBill" }</div>`;
         term.scrollTop = term.scrollHeight;
         
         setTimeout(() => {
             if (phase === "SECURE") {
-                // Normal Cellular
-                term.innerHTML += `<div class="msg-success">[+] STK Push transmitted via Safaricom BTS-1 (A5/3 Encrypted).</div>`;
-                term.innerHTML += `<div class="msg-success">[+] TRANSACTION COMPLETE.</div>`;
+                // NORMAL
+                term.innerHTML += `<div class="msg-success">[+] PIN Encrypted: ********</div>`;
+                term.innerHTML += `<div class="msg-success">[+] STK Push transmitted via KABARAK-MAIN (A5/3 Encrypted).</div>`;
             } 
             else if (phase === "ROGUE_ACTIVATION" || phase === "DOWNGRADE") {
-                // Interception Attack
-                term.innerHTML += `<div class="msg-error">[!] CRITICAL: Network downgraded to A5/0 (NULL CIPHER).</div>`;
-                term.innerHTML += `<div class="msg-error">[!] DARAJA PAYLOAD HALTED. STK Push vulnerable to Man-In-The-Middle attack!</div>`;
+                // THE HACK: Show the PIN in plain text!
+                term.innerHTML += `<div class="msg-error" style="font-size: 14px; font-weight: bold; background: #300;">[!] CRITICAL INTERCEPT: PIN EXPOSED IN PLAIN TEXT: ${pin}</div>`;
+                term.innerHTML += `<div class="msg-error">[!] DARAJA PAYLOAD HALTED. Man-In-The-Middle attack detected!</div>`;
             } 
             else if (phase === "MESH_FORMATION" || phase === "CONTAINED") {
-                // Sovereign Mesh Rescue
+                // MESH SAVES THE DAY
                 term.innerHTML += `<div>[*] Cellular layer compromised. Bypassing Safaricom RAN...</div>`;
+                term.innerHTML += `<div class="msg-mesh">[+] PIN AES-Encrypted Locally: [ENCRYPTED-HASH-0x9F]</div>`;
                 term.innerHTML += `<div class="msg-mesh">[+] Routing Daraja Payload via Sovereign P2P Mesh Network...</div>`;
-                term.innerHTML += `<div class="msg-mesh">[+] STK Push delivered via AES-256-GCM Tunnel.</div>`;
-                term.innerHTML += `<div class="msg-success">[+] TRANSACTION SECURELY COMPLETED.</div>`;
             }
             term.scrollTop = term.scrollHeight;
         }, 800);
     }, 400);
 };
+
+/* ============================ SHODAN DUAL CAMERA ============================ */
+function triggerOsintSequence() {
+    const panel = document.getElementById('osint-panel');
+    const term = document.getElementById('osint-term');
+    
+    panel.classList.remove('hidden');
+    
+    // THE MAGIC: Put Teammate 1's Ngrok link here
+    document.getElementById('cctv-video-1').src = "https://TEAMMATE_1_NGROK.ngrok-free.app/video_feed";
+    // Put Teammate 2's Ngrok link here
+    document.getElementById('cctv-video-2').src = "https://TEAMMATE_2_NGROK.ngrok-free.app/video_feed";
+    
+    const sequence = [
+        "[+] Distributed TDOA Geolocation complete. Targets acquired.",
+        "[*] Initiating Shodan.io API Pivot in Nakuru County...",
+        "[*] Bypassing firewall for CAM-KABARAK-GATE...",
+        "[*] Bypassing firewall for CAM-NAKURU-CBD...",
+        "[+] LIVE VIDEO STREAMS HIJACKED."
+    ];
+    
+    term.innerHTML = "";
+    let delay = 0;
+    
+    sequence.forEach((line) => {
+        setTimeout(() => {
+            term.innerHTML += `<div>${line}</div>`;
+            term.scrollTop = term.scrollHeight; 
+        }, delay);
+        delay += 800;
+    });
+
+    setTimeout(() => {
+        document.getElementById('ai-box-1').classList.remove('hidden');
+        document.getElementById('ai-box-2').classList.remove('hidden');
+    }, delay + 1000);
+}
 
 // Auto-update the M-Pesa Status text during the scenario
 const mpesaHUDUpdate = updateHUD;
