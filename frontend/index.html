@@ -66,12 +66,31 @@
         </section>
     </aside>
 
-    <!-- ============ RIGHT: EVENT LOG ============ -->
+    <!-- ============ RIGHT: DARAJA API & EVENT LOG ============ -->
     <aside id="right-panel">
+        
+        <!-- NEW: DARAJA API GATEWAY -->
+        <section class="panel mpesa-panel">
+            <div class="mpesa-header">
+                <h2>DARAJA API // M-PESA GATEWAY</h2>
+                <span id="mpesa-status" class="mono status-ok">● SECURE TUNNEL</span>
+            </div>
+            <div class="mpesa-form">
+                <input type="text" id="mpesa-phone" value="0712 345 678" readonly>
+                <input type="text" id="mpesa-amount" value="KES 5,000" readonly>
+                <button id="btn-stk" onclick="triggerSTKPush()">SEND STK PUSH</button>
+            </div>
+            <div id="mpesa-terminal" class="mono">
+                [READY] Waiting for transaction...
+            </div>
+        </section>
+
+        <!-- LIVE EVENT LOG -->
         <section class="panel log-panel">
             <h2>LIVE EVENT FEED</h2>
             <div id="event-log" class="mono"></div>
         </section>
+
     </aside>
 
     <!-- ============ BOTTOM: CONTROLS ============ -->
@@ -94,10 +113,8 @@
         </div>
         <div class="cctv-container">
             <div class="scanlines"></div>
-            <!-- Royalty-free traffic/street loop, filtered to look like CCTV -->
-            <video id="cctv-video" autoplay loop muted playsinline>
-                <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-            </video>
+            <!-- Image tag set up perfectly for your teammate's Ngrok MJPEG stream -->
+            <img id="cctv-video" src="" alt="Live Stream Offline" crossorigin="anonymous">
             <div class="cctv-overlay">
                 <div class="crosshair"></div>
                 <div class="cctv-data">

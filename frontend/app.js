@@ -471,3 +471,62 @@ function triggerOsintSequence() {
         document.getElementById('ai-box').classList.remove('hidden');
     }, delay + 1000);
 }
+/* ============================ DARAJA API LOGIC ============================ */
+function triggerSTKPush() {
+    const term = document.getElementById('mpesa-terminal');
+    const mpesaStatus = document.getElementById('mpesa-status');
+    const phase = snapshot ? snapshot.phase : "SECURE";
+    
+    // Clear terminal
+    term.innerHTML = "";
+
+    term.innerHTML += `<div>[*] Initiating Daraja OAuth Token...</div>`;
+    
+    setTimeout(() => {
+        term.innerHTML += `<div>[*] Payload: { "Amount": 5000, "PartyA": "0712***", "TransType": "PayBill" }</div>`;
+        
+        setTimeout(() => {
+            if (phase === "SECURE") {
+                // Normal Cellular
+                term.innerHTML += `<div class="msg-success">[+] STK Push transmitted via Safaricom BTS-1 (A5/3 Encrypted).</div>`;
+                term.innerHTML += `<div class="msg-success">[+] TRANSACTION COMPLETE.</div>`;
+            } 
+            else if (phase === "ROGUE_ACTIVATION" || phase === "DOWNGRADE") {
+                // Interception Attack
+                term.innerHTML += `<div class="msg-error">[!] CRITICAL: Network downgraded to A5/0 (NULL CIPHER).</div>`;
+                term.innerHTML += `<div class="msg-error">[!] DARAJA PAYLOAD HALTED. STK Push vulnerable to Man-In-The-Middle attack!</div>`;
+                mpesaStatus.className = "mono status-danger";
+                mpesaStatus.innerText = "● INTERCEPT RISK";
+            } 
+            else if (phase === "MESH_FORMATION" || phase === "CONTAINED") {
+                // Sovereign Mesh Rescue
+                term.innerHTML += `<div>[*] Cellular layer compromised. Bypassing Safaricom RAN...</div>`;
+                term.innerHTML += `<div class="msg-mesh">[+] Routing Daraja Payload via Sovereign P2P Mesh Network...</div>`;
+                term.innerHTML += `<div class="msg-mesh">[+] STK Push delivered via AES-256-GCM Tunnel.</div>`;
+                term.innerHTML += `<div class="msg-success">[+] TRANSACTION SECURELY COMPLETED.</div>`;
+                mpesaStatus.className = "mono status-mesh";
+                mpesaStatus.innerText = "● MESH TUNNEL ACTIVE";
+            }
+            term.scrollTop = term.scrollHeight;
+        }, 800);
+    }, 400);
+}
+
+// Auto-update the Daraja Status text when the snapshot phase changes
+const originalHUDUpdate = updateHUD;
+updateHUD = function(s) {
+    originalHUDUpdate(s);
+    checkOsintTrigger(s.phase); // From previous CCTV update
+    
+    const mpesaStatus = document.getElementById('mpesa-status');
+    if (s.phase === "SECURE") {
+        mpesaStatus.className = "mono status-ok";
+        mpesaStatus.innerText = "● SECURE TUNNEL";
+    } else if (s.phase === "ROGUE_ACTIVATION" || s.phase === "DOWNGRADE") {
+        mpesaStatus.className = "mono status-danger";
+        mpesaStatus.innerText = "● INTERCEPT RISK";
+    } else if (s.phase === "MESH_FORMATION" || s.phase === "CONTAINED") {
+        mpesaStatus.className = "mono status-mesh";
+        mpesaStatus.innerText = "● MESH TUNNEL ACTIVE";
+    }
+};
